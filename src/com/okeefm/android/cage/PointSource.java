@@ -1,11 +1,13 @@
 package com.okeefm.android.cage;
 
 import java.util.concurrent.LinkedBlockingQueue;
-
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 
 public class PointSource {
-	private LinkedBlockingQueue <Point> points = new LinkedBlockingQueue<Point> ();
+	private static LinkedBlockingQueue <AccelerometerPoint> points = new LinkedBlockingQueue <AccelerometerPoint> ();
 	private AccelerometerThread runLoop;
 	private Exception problem = null;
 	
@@ -26,7 +28,7 @@ public class PointSource {
 		doDisconnect = true;
 	}
 	
-	public Point take() throws Exception {
+	public AccelerometerPoint take() throws Exception {
 		if(problem != null) {
 			Exception temp = problem;
 			problem = null;
@@ -43,9 +45,20 @@ public class PointSource {
 		return connected;
 	}
 
-	private class AccelerometerThread extends Thread {
+	private static class AccelerometerThread extends Thread {
 		private Accelerometer acc;
 		public boolean readyToRun = false;
+		private static SensorEventListener sensorEventListener = new SensorEventListener() {
+			
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+			
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				points.add(new AccelerometerPoint(event.values));
+			}
+			
+		};
 
 		
 		public AccelerometerThread(Context context) {
