@@ -1,18 +1,25 @@
 package com.okeefm.android.cage;
 
-public class Point {
+public class AccelerometerPoint {
 	private float x;
 	private float y;
 	private float z;
 	private long time;
 	
-	public Point(float x, float y, float z, long time) {
+	public AccelerometerPoint(float x, float y, float z, long time) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.time = time;
 	}
 	
+	public AccelerometerPoint(float[] values) {
+		x = values[0];
+		y = values[1];
+		z = values[2];
+		
+	}
+
 	public float[] pointArray() {
 		float[] retArray = new float[3];
 		retArray[0] = this.x;
