@@ -13,10 +13,11 @@ public class AccelerometerPoint {
 		this.time = time;
 	}
 	
-	public AccelerometerPoint(float[] values) {
+	public AccelerometerPoint(float[] values, long time) {
 		x = values[0];
 		y = values[1];
 		z = values[2];
+		this.time = time;
 		
 	}
 
