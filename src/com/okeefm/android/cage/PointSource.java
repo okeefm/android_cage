@@ -9,11 +9,11 @@ import android.hardware.SensorEventListener;
 public class PointSource {
 	private static LinkedBlockingQueue <AccelerometerPoint> points = new LinkedBlockingQueue <AccelerometerPoint> ();
 	private AccelerometerThread runLoop;
-	private Exception problem = null;
+	private static Exception problem = null;
 	
 	private volatile boolean connected = false;
-	private volatile boolean doConnect = false;
-	private volatile boolean doDisconnect = false;
+	private volatile static boolean doConnect = false;
+	private volatile static boolean doDisconnect = false;
 	
 	public PointSource (Context context) {
 		runLoop = new AccelerometerThread(context);
@@ -48,14 +48,14 @@ public class PointSource {
 	private static class AccelerometerThread extends Thread {
 		private Accelerometer acc;
 		public boolean readyToRun = false;
-		private static SensorEventListener sensorEventListener = new SensorEventListener() {
+		private static SensorEventListener listener = new SensorEventListener() {
 			
 			@Override
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 			
 			@Override
 			public void onSensorChanged(SensorEvent event) {
-				points.add(new AccelerometerPoint(event.values));
+				points.add(new AccelerometerPoint(event.values, event.timestamp));
 			}
 			
 		};
